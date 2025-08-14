@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/form";
 import { forgotPasswordSchema, ForgotPasswordSchemaData } from "../auth-schema";
 import { toast } from "sonner";
-import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 
@@ -30,7 +29,6 @@ export function ForgotPasswordForm() {
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const router = useRouter();
 
   async function onSubmit(values: ForgotPasswordSchemaData) {
     await authClient.forgetPassword({

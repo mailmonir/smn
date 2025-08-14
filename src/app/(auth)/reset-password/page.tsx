@@ -6,15 +6,12 @@ import Link from "next/link";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-interface SearchParams {
-  [key: string]: string | undefined;
-}
+type SearchParams = Promise<{ [key: string]: string | undefined }>;
 
-export default async function LoginPage({
-  searchParams,
-}: {
-  searchParams: SearchParams;
-}) {
+export default async function LoginPage(props: { searchParams: SearchParams }) {
+  const searchParams = await props.searchParams;
+  // const query = searchParams.query;
+  console.log(searchParams);
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -22,7 +19,8 @@ export default async function LoginPage({
   if (session) {
     redirect("/dashboard");
   }
-  const token = (await searchParams).token;
+
+  const token = searchParams.token;
 
   if (!token) redirect("/auth/login");
 
