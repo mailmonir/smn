@@ -24,7 +24,7 @@ export function ForgotPasswordForm() {
   const form = useForm<ForgotPasswordSchemaData>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
-      email: "sendmailtomislam@gmail.com",
+      email: "",
     },
   });
 

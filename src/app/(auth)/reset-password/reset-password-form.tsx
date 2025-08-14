@@ -25,8 +25,8 @@ export function ResetPasswordForm({ token }: { token: string }) {
   const form = useForm<ResetPasswordSchemaData>({
     resolver: zodResolver(resetPasswordSchema),
     defaultValues: {
-      newPassword: "Pushpita@2008",
-      newPasswordConfirmation: "Pushpita@2008",
+      newPassword: "",
+      newPasswordConfirmation: "",
     },
   });
 
