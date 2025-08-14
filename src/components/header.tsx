@@ -124,11 +124,6 @@ const UserMenu = () => {
   const router = useRouter();
 
   const { data: session } = useSession();
-  console.log(session);
-
-  if (!session) {
-    return;
-  }
 
   return (
     <>
