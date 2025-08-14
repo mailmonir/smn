@@ -10,8 +10,6 @@ type SearchParams = Promise<{ [key: string]: string | undefined }>;
 
 export default async function LoginPage(props: { searchParams: SearchParams }) {
   const searchParams = await props.searchParams;
-  // const query = searchParams.query;
-  console.log(searchParams);
   const session = await auth.api.getSession({
     headers: await headers(),
   });
