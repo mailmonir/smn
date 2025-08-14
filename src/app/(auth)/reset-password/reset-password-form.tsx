@@ -35,7 +35,6 @@ export function ResetPasswordForm({ token }: { token: string }) {
 
   async function onSubmit(values: ResetPasswordSchemaData) {
     setIsSubmitting(true);
-    // try {
     const formData = new FormData();
 
     for (const [key, value] of Object.entries(values)) {

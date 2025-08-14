@@ -33,7 +33,7 @@ export function ForgotPasswordForm() {
   async function onSubmit(values: ForgotPasswordSchemaData) {
     await authClient.forgetPassword({
       email: values.email,
-      redirectTo: "http://localhost:3000/reset-password",
+      redirectTo: process.env.NEXT_PUBLIC_SITE_URL + "/reset-password",
       fetchOptions: {
         onRequest: () => {
           setIsSubmitting(true);
