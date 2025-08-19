@@ -42,50 +42,6 @@
 //   return chatClient;
 // }
 
-// import kyInstance from "@/lib/ky";
-// import { useEffect, useState } from "react";
-// import { StreamChat } from "stream-chat";
-// import { useSession } from "../SessionProvider";
-
-// export default function useInitializeChatClient() {
-//   const { user } = useSession();
-//   const [chatClient, setChatClient] = useState<StreamChat | null>(null);
-
-//   useEffect(() => {
-//     if (!user) {
-//       setChatClient(null);
-//       return;
-//     }
-//     const client = StreamChat.getInstance(process.env.NEXT_PUBLIC_STREAM_KEY!);
-
-//     client
-//       .connectUser(
-//         {
-//           id: user.id,
-//           name: user.displayName || user.name,
-//           image: user.image || "",
-//         },
-//         async () =>
-//           kyInstance
-//             .get("/api/get-token")
-//             .json<{ token: string }>()
-//             .then((data) => data.token)
-//       )
-//       .then(() => setChatClient(client))
-//       .catch((error) => console.error("Failed to connect user", error));
-
-//     return () => {
-//       setChatClient(null);
-//       client
-//         .disconnectUser()
-//         .then(() => console.log("Connection closed"))
-//         .catch((error) => console.error("Failed to disconnect user", error));
-//     };
-//   }, [user?.id, user?.displayName || user?.name, user?.image]);
-
-//   return chatClient;
-// }
-
 import kyInstance from "@/lib/ky";
 import { useEffect, useState } from "react";
 import { StreamChat } from "stream-chat";
@@ -97,44 +53,35 @@ export default function useInitializeChatClient() {
 
   useEffect(() => {
     if (!user) {
+      setChatClient(null);
       return;
     }
-
     const client = StreamChat.getInstance(process.env.NEXT_PUBLIC_STREAM_KEY!);
 
-    let isMounted = true;
-
-    (async () => {
-      try {
-        const { token } = await kyInstance
-          .get("/api/get-token")
-          .json<{ token: string }>();
-
-        await client.connectUser(
-          {
-            id: user.id, // better than email
-            name: user.displayName || user.name || user.email,
-            image: user.image || "/user-avatar.png",
-          },
-          token
-        );
-
-        if (isMounted) {
-          setChatClient(client);
-        }
-      } catch (error) {
-        console.error("Failed to connect user", error);
-      }
-    })();
+    client
+      .connectUser(
+        {
+          id: user.id,
+          name: user.displayName || user.name,
+          image: user.image || "/user-avatar.png",
+        },
+        async () =>
+          kyInstance
+            .get("/api/get-token")
+            .json<{ token: string }>()
+            .then((data) => data.token)
+      )
+      .then(() => setChatClient(client))
+      .catch((error) => console.error("Failed to connect user", error));
 
     return () => {
-      isMounted = false;
       setChatClient(null);
       client
         .disconnectUser()
+        .then(() => console.log("Connection closed"))
         .catch((error) => console.error("Failed to disconnect user", error));
     };
-  }, [user]);
+  }, [user?.id, user?.displayName || user?.name, user?.image]);
 
   return chatClient;
 }
