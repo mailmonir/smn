@@ -9,14 +9,24 @@ export async function GET() {
       headers: await headers(),
     });
 
-    const user = session?.user as { id: string };
+    const user = session?.user as {
+      id: string;
+      email?: string;
+      image?: string;
+    };
 
     if (!user) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
+    await streamServerClient.upsertUser({
+      id: user.id,
+      name: user.email ?? "Anonymous", // or use displayName
+      image: user.image,
+    });
+
     const { total_unread_count } = await streamServerClient.getUnreadCount(
-      user.id
+      user.email
     );
 
     const data: MessageCountInfo = {

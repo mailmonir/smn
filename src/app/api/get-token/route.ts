@@ -8,9 +8,9 @@ export async function GET() {
       headers: await headers(),
     });
 
-    const user = session?.user as { id: string };
+    const user = session?.user as { email: string };
 
-    console.log("Calling get-token for user: ", user?.id);
+    console.log("Calling get-token for user: ", user?.email);
 
     if (!user) {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
@@ -21,7 +21,7 @@ export async function GET() {
     const issuedAt = Math.floor(Date.now() / 1000) - 60;
 
     const token = streamServerClient.createToken(
-      user.id,
+      user.email,
       expirationTime,
       issuedAt
     );
