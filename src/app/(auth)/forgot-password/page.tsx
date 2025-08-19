@@ -1,19 +1,9 @@
 import { GalleryVerticalEnd } from "lucide-react";
 
 import { ForgotPasswordForm } from "./forgot-password-form";
-import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import Link from "next/link";
 
 export default async function LoginPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (session) {
-    redirect("/dashboard");
-  }
   return (
     <div className="min-h-svh flex items-center justify-center">
       <div className="flex flex-col gap-4 p-6 md:p-10">

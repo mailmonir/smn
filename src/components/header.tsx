@@ -14,6 +14,7 @@ import { signOut } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 import { useSession } from "@/lib/auth-client";
 import Image from "next/image";
+import { ModeToggle } from "./mode-toggle";
 
 import { Menu, User } from "lucide-react";
 
@@ -100,7 +101,8 @@ const Header = () => {
             </Link>
           ))}
         </div>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end space-x-2">
+          <ModeToggle />
           <UserMenu />
         </div>
       </nav>
@@ -129,10 +131,17 @@ const UserMenu = () => {
     <>
       {session ? (
         <DropdownMenu>
-          <DropdownMenuTrigger>
+          <DropdownMenuTrigger asChild>
             <Avatar>
-              <AvatarImage src={session.user.image || "/user-avatar.png"} />
-              <AvatarFallback>CN</AvatarFallback>
+              <AvatarImage src={session?.user?.image || "/user-avatar.png"} />
+              <AvatarFallback>
+                <AvatarFallback>
+                  {session.user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")}
+                </AvatarFallback>
+              </AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">

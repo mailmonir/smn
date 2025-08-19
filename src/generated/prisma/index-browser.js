@@ -120,7 +120,10 @@ exports.Prisma.UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  username: 'username',
+  displayName: 'displayName',
+  bio: 'bio'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {
@@ -159,6 +162,58 @@ exports.Prisma.VerificationScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.FollowScalarFieldEnum = {
+  id: 'id',
+  followerId: 'followerId',
+  followingId: 'followingId'
+};
+
+exports.Prisma.PostScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  userId: 'userId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.MediaScalarFieldEnum = {
+  id: 'id',
+  postId: 'postId',
+  type: 'type',
+  url: 'url',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.CommentScalarFieldEnum = {
+  id: 'id',
+  content: 'content',
+  userId: 'userId',
+  postId: 'postId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.LikeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  postId: 'postId'
+};
+
+exports.Prisma.BookmarkScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  postId: 'postId',
+  createdAt: 'createdAt'
+};
+
+exports.Prisma.NotificationScalarFieldEnum = {
+  id: 'id',
+  recipientId: 'recipientId',
+  issuerId: 'issuerId',
+  postId: 'postId',
+  type: 'type',
+  read: 'read',
+  createdAt: 'createdAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -168,13 +223,29 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
+exports.MediaType = exports.$Enums.MediaType = {
+  IMAGE: 'IMAGE',
+  VIDEO: 'VIDEO'
+};
 
+exports.NotificationType = exports.$Enums.NotificationType = {
+  LIKE: 'LIKE',
+  FOLLOW: 'FOLLOW',
+  COMMENT: 'COMMENT'
+};
 
 exports.Prisma.ModelName = {
   User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Follow: 'Follow',
+  Post: 'Post',
+  Media: 'Media',
+  Comment: 'Comment',
+  Like: 'Like',
+  Bookmark: 'Bookmark',
+  Notification: 'Notification'
 };
 
 /**

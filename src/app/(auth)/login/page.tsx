@@ -3,20 +3,9 @@ import { GalleryVerticalEnd } from "lucide-react";
 import { LoginForm } from "./login-form";
 import loginImage from "./login-image.jpg";
 import Image from "next/image";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export default async function LoginPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (session) {
-    redirect("/dashboard");
-  }
-
   return (
     <div className="grid min-h-svh lg:grid-cols-2">
       <div className="bg-muted relative hidden lg:flex items-center justify-center">

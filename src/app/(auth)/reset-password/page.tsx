@@ -3,20 +3,11 @@ import { GalleryVerticalEnd } from "lucide-react";
 import { ResetPasswordForm } from "./reset-password-form";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 
 type SearchParams = Promise<{ [key: string]: string | undefined }>;
 
 export default async function LoginPage(props: { searchParams: SearchParams }) {
   const searchParams = await props.searchParams;
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (session) {
-    redirect("/dashboard");
-  }
 
   const token = searchParams.token;
 
