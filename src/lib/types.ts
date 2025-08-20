@@ -18,6 +18,7 @@ export function getUserDataSelect(loggedInUserId: string) {
     id: true,
     username: true,
     displayName: true,
+    email: true,
     bio: true,
     name: true,
     image: true,
@@ -106,6 +107,9 @@ export const notificationsInclude = {
       username: true,
       displayName: true,
       image: true,
+      name: true,
+      email: true,
+      id: true,
     },
   },
   post: {

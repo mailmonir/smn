@@ -19,14 +19,8 @@ export async function GET() {
       return Response.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    await streamServerClient.upsertUser({
-      id: user.id,
-      name: user.email ?? "Anonymous", // or use displayName
-      image: user.image,
-    });
-
     const { total_unread_count } = await streamServerClient.getUnreadCount(
-      user.email
+      user.id
     );
 
     const data: MessageCountInfo = {

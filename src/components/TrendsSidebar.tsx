@@ -62,7 +62,7 @@ async function WhoToFollow() {
                   {user.displayName || user.name}
                 </p>
                 <p className="line-clamp-1 break-all text-muted-foreground">
-                  @{user.id}
+                  {user.email}
                 </p>
               </div>
             </Link>
