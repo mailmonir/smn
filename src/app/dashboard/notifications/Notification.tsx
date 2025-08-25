@@ -21,21 +21,21 @@ export default function Notification({ notification }: NotificationProps) {
         notification.issuer.displayName || notification.issuer.name
       } followed you`,
       icon: <User2 className="size-7 text-primary" />,
-      href: `/users/${notification.issuer.id}`,
+      href: `/dashboard/users/${notification.issuer.id}`,
     },
     COMMENT: {
       message: `${
         notification.issuer.displayName || notification.issuer.name
       } commented on your post`,
       icon: <MessageCircle className="size-7 fill-primary text-primary" />,
-      href: `/posts/${notification.postId}`,
+      href: `/dashboard/posts/${notification.postId}`,
     },
     LIKE: {
       message: `${
         notification.issuer.displayName || notification.issuer.name
       } liked your post`,
       icon: <Heart className="size-7 fill-red-500 text-red-500" />,
-      href: `/posts/${notification.postId}`,
+      href: `/dashboard/posts/${notification.postId}`,
     },
   };
 
