@@ -21,15 +21,14 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import Social from "../social";
 import { authClient } from "@/lib/auth-client";
-
 export function SignupForm() {
   const form = useForm<SignupSchemaData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
-      name: "",
-      email: "",
-      password: "",
-      passwordConfirmation: "",
+      name: "Someone",
+      email: "freelancer.monirul.islam@gmail.com",
+      password: "Pushpita@2008",
+      passwordConfirmation: "Pushpita@2008",
     },
   });
 

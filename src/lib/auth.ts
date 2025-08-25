@@ -2,6 +2,9 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import prisma from "./prisma";
 import { sendEmail } from "./send-email";
+import { createAuthMiddleware } from "better-auth/api";
+import { generateUniqueUsername } from "./unique-username";
+import streamServerClient from "@/lib/stream";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -43,5 +46,46 @@ export const auth = betterAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
+  account: {
+    accountLinking: {
+      enabled: true,
+      trustedProviders: ["google"],
+      updateUserInfoOnLink: true,
+    },
+  },
+  user: {
+    additionalFields: {
+      username: {
+        type: "string",
+        required: false,
+      },
+      bio: {
+        type: "string",
+        required: false,
+      },
+      displayName: {
+        type: "string",
+        required: false,
+      },
+    },
+  },
   plugins: [],
+  hooks: {
+    after: createAuthMiddleware(async (ctx) => {
+      if (
+        ctx.path.startsWith("/verify-email") ||
+        ctx.path.startsWith("/callback/")
+      ) {
+        const newSession = ctx.context.newSession;
+        if (newSession?.user) {
+          await streamServerClient.upsertUser({
+            id: newSession.user.id,
+            username: newSession?.user.email,
+            name: newSession?.user.name,
+            image: newSession?.user.image || "/user-avatar.png",
+          });
+        }
+      }
+    }),
+  },
 });

@@ -21,7 +21,6 @@ interface PostProps {
 }
 
 export default function Post({ post }: PostProps) {
-  console.log(post);
   const { data } = useSession();
   const user = data?.user;
 
