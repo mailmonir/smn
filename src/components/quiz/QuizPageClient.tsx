@@ -1,56 +1,27 @@
+// src/components/quiz/QuizPageClient.tsx
 "use client";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
-import prisma from "@/lib/prisma";
-import QuizInterface from "@/components/quiz/QuizInterface";
+
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { QuestionOption } from "@/lib/types";
-import Link from "next/link";
+import QuizInterface from "./QuizInterface";
+import { QuizCategory, QuizAttempt } from "@/lib/types";
 
-export default async function QuizPage() {
-  const session = await auth.api.getSession({
-    headers: await headers(), // you need to pass the headers object.
-  });
+interface QuizPageClientProps {
+  categories: QuizCategory[];
+  attempt: QuizAttempt | null;
+  passedAttempt: any;
+  existingCertificate: any;
+  userId: string;
+}
 
-  if (!session) {
-    return;
-  }
-
-  const categories = await prisma.category.findMany({
-    orderBy: { order: "asc" },
-    include: {
-      questions: {
-        orderBy: { order: "asc" },
-        select: {
-          id: true,
-          question: true,
-          options: true,
-          marks: true,
-          order: true,
-          categoryId: true,
-        },
-      },
-    },
-  });
-
-  // Filter out empty categories
-  // const categoriesWithQuestions = categories.filter(
-  //   (cat) => cat.questions.length > 0
-  // );
-
-  const categoriesWithQuestions = categories
-    .filter((cat) => cat.questions.length > 0)
-    .map((cat) => ({
-      ...cat,
-      description: cat.description || undefined,
-      questions: cat.questions.map((q) => ({
-        ...q,
-        options: q.options as unknown as QuestionOption[],
-      })),
-    }));
-
-  if (categoriesWithQuestions.length === 0) {
+export default function QuizPageClient({
+  categories,
+  attempt,
+  passedAttempt,
+  existingCertificate,
+  userId,
+}: QuizPageClientProps) {
+  if (categories.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="max-w-2xl mx-auto p-8 text-center">
@@ -66,40 +37,7 @@ export default async function QuizPage() {
     );
   }
 
-  // Check for existing incomplete attempt
-  let attempt = await prisma.quizAttempt.findFirst({
-    where: {
-      userId: session.user.id,
-      completed: false,
-    },
-    include: {
-      answers: {
-        include: {
-          question: {
-            select: { categoryId: true },
-          },
-        },
-      },
-    },
-  });
-
-  // Check if user has already passed and needs to pay
-  const passedAttempt = await prisma.quizAttempt.findFirst({
-    where: {
-      userId: session.user.id,
-      completed: true,
-      passed: true,
-    },
-    orderBy: { completedAt: "desc" },
-  });
-
-  // Check if user already has certificate
-  const existingCertificate = await prisma.certificate.findFirst({
-    where: { userId: session.user.id },
-  });
-
   if (passedAttempt && !existingCertificate) {
-    // User passed but hasn't paid for certificate yet
     const percentage = Math.round(
       (passedAttempt.totalScore / passedAttempt.maxScore) * 100
     );
@@ -143,25 +81,21 @@ export default async function QuizPage() {
               To receive your official certificate and digital badge, please
               proceed with payment.
             </p>
-            <Link href={`/payment?attemptId=${passedAttempt.id}`}>
-              <Button
-                className="w-full bg-green-600 hover:bg-green-700"
-                // onClick={() =>
-                //   (window.location.href = `/payment?attemptId=${passedAttempt.id}`)
-                // }
-              >
-                Get Certificate & Badge - $29.99
-              </Button>
-            </Link>
-            <Link href="/dashboard">
-              <Button
-                variant="outline"
-                className="w-full"
-                // onClick={() => (window.location.href = "/dashboard")}
-              >
-                Go to Dashboard
-              </Button>
-            </Link>
+            <Button
+              className="w-full bg-green-600 hover:bg-green-700"
+              onClick={() =>
+                (window.location.href = `/payment?attemptId=${passedAttempt.id}`)
+              }
+            >
+              Get Certificate & Badge - $29.99
+            </Button>
+            <Button
+              variant="outline"
+              className="w-full"
+              onClick={() => (window.location.href = "/dashboard")}
+            >
+              Go to Dashboard
+            </Button>
           </div>
         </Card>
       </div>
@@ -169,7 +103,6 @@ export default async function QuizPage() {
   }
 
   if (existingCertificate) {
-    // User already has certificate
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <Card className="max-w-2xl mx-auto p-8 text-center">
@@ -218,43 +151,15 @@ export default async function QuizPage() {
   }
 
   if (!attempt) {
-    // Calculate total marks for new attempt
-    const totalMarks = await prisma.question.aggregate({
-      _sum: { marks: true },
-    });
-
-    const passScore = Math.ceil((totalMarks._sum.marks || 0) * 0.6); // 60% pass mark
-
-    attempt = await prisma.quizAttempt.create({
-      data: {
-        userId: session.user.id,
-        maxScore: totalMarks._sum.marks || 0,
-        passScore,
-        // completedAt: undefined,
-      },
-      include: {
-        answers: {
-          include: {
-            question: {
-              select: { categoryId: true },
-            },
-          },
-        },
-      },
-    });
+    return <div>Loading...</div>;
   }
-
-  const transformedAttempt = {
-    ...attempt,
-    completedAt: attempt.completedAt || undefined,
-  };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <QuizInterface
-        categories={categoriesWithQuestions}
-        attempt={transformedAttempt}
-        userId={session.user.id}
+        categories={categories}
+        attempt={attempt}
+        userId={userId}
       />
     </div>
   );
