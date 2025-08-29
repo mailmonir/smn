@@ -149,3 +149,50 @@ export interface NotificationCountInfo {
 export interface MessageCountInfo {
   unreadCount: number;
 }
+
+export interface QuizQuestion {
+  id: string;
+  categoryId: string;
+  question: string;
+  options: QuestionOption[];
+  marks: number;
+  order: number;
+}
+
+export interface QuestionOption {
+  id: string;
+  text: string;
+  isCorrect: boolean;
+}
+
+export interface QuizCategory {
+  id: string;
+  name: string;
+  description?: string | null;
+  order: number;
+  questions: QuizQuestion[];
+}
+
+export interface QuizAttempt {
+  id: string;
+  userId: string;
+  totalScore: number;
+  maxScore: number;
+  passScore: number;
+  passed: boolean;
+  completed: boolean;
+  currentTab: number;
+  startedAt: Date;
+  completedAt?: Date;
+  answers: UserAnswer[];
+}
+
+export interface UserAnswer {
+  id: string;
+  attemptId: string;
+  questionId: string;
+  selectedOption: string;
+  isCorrect: boolean;
+  marksEarned: number;
+  answeredAt: Date;
+}

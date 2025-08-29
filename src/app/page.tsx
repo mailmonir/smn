@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 
 import Header from "@/components/header";
+import Link from "next/link";
 
 export default function Home() {
   return (
@@ -40,7 +41,9 @@ export default function Home() {
               friendship, collaboration, and shared values.
             </p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
-              <Button>Get started</Button>
+              <Link href="/quiz">
+                <Button>Get started</Button>
+              </Link>
               <Button
                 variant="ghost"
                 className="text-sm/6 font-semibold text-secondary-foreground"

@@ -35,12 +35,6 @@ const buttonVariants = cva(
   }
 );
 
-export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
-  asChild?: boolean;
-}
-
 function Button({
   className,
   variant,
@@ -61,5 +55,11 @@ function Button({
     />
   );
 }
+
+// ✅ Extract props into a reusable type
+export type ButtonProps = React.ComponentProps<"button"> &
+  VariantProps<typeof buttonVariants> & {
+    asChild?: boolean;
+  };
 
 export { Button, buttonVariants };

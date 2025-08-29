@@ -5,6 +5,7 @@ import { sendEmail } from "./send-email";
 import { createAuthMiddleware } from "better-auth/api";
 import { generateUniqueUsername } from "./unique-username";
 import streamServerClient from "@/lib/stream";
+import { admin } from "better-auth/plugins";
 
 export const auth = betterAuth({
   database: prismaAdapter(prisma, {
@@ -69,7 +70,7 @@ export const auth = betterAuth({
       },
     },
   },
-  plugins: [],
+  plugins: [admin()],
   hooks: {
     after: createAuthMiddleware(async (ctx) => {
       if (

@@ -30,6 +30,13 @@ model User {
   username              String?
   displayName           String?
   bio                   String?
+  QuizAttempt           QuizAttempt[]
+  Payment               Payment[]
+  Certificate           Certificate[]
+  role                  Role?
+  banned                Boolean?
+  banReason             String?
+  banExpires            DateTime?
 
   @@unique([email])
   @@map("user")
@@ -45,6 +52,8 @@ model Session {
   userAgent String?
   userId    String
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  impersonatedBy String?
 
   @@unique([token])
   @@map("session")
@@ -181,4 +190,107 @@ enum NotificationType {
   LIKE
   FOLLOW
   COMMENT
+}
+
+model Category {
+  id          String   @id @default(cuid()) @map("_id")
+  name        String
+  description String?
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  questions Question[]
+
+  @@map("categories")
+}
+
+model Question {
+  id         String   @id @default(cuid()) @map("_id")
+  categoryId String
+  question   String
+  options    Json // Array of option objects with id, text, isCorrect
+  marks      Int      @default(1)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  category Category     @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  answers  UserAnswer[]
+
+  @@map("questions")
+}
+
+model QuizAttempt {
+  id          String    @id @default(cuid()) @map("_id")
+  userId      String
+  totalScore  Int       @default(0)
+  maxScore    Int       @default(0)
+  passScore   Int       @default(0)
+  passed      Boolean   @default(false)
+  completed   Boolean   @default(false)
+  currentTab  Int       @default(0)
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+
+  user    User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  answers UserAnswer[]
+
+  @@map("quiz_attempts")
+}
+
+model UserAnswer {
+  id             String   @id @default(cuid()) @map("_id")
+  attemptId      String
+  questionId     String
+  selectedOption String // ID of selected option
+  isCorrect      Boolean  @default(false)
+  marksEarned    Int      @default(0)
+  answeredAt     DateTime @default(now())
+
+  attempt  QuizAttempt @relation(fields: [attemptId], references: [id], onDelete: Cascade)
+  question Question    @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@unique([attemptId, questionId])
+  @@map("user_answers")
+}
+
+model Payment {
+  id        String        @id @default(cuid()) @map("_id")
+  userId    String
+  amount    Float
+  currency  String        @default("USD")
+  status    PaymentStatus @default(PENDING)
+  stripeId  String?
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("payments")
+}
+
+model Certificate {
+  id                String   @id @default(cuid()) @map("_id")
+  userId            String
+  certificateNumber String   @unique
+  issueDate         DateTime @default(now())
+  score             Int
+  passScore         Int
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("certificates")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum PaymentStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  REFUNDED
 }

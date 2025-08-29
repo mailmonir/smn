@@ -4,7 +4,7 @@ import { redirect } from "next/navigation";
 import MenuBar from "./MenuBar";
 import Navbar from "./Navbar";
 import SessionProvider from "@/app/dashboard/SessionProvider";
-import { User, Session } from "@/generated/prisma";
+import { User, Session, Role } from "@/generated/prisma";
 
 type AuthUser = {
   id: string;
@@ -17,6 +17,10 @@ type AuthUser = {
   username?: string | null;
   displayName?: string | null;
   bio?: string | null;
+  role?: string | null; // Add this line
+  banReason?: string | null; // Add this line
+  banned?: boolean | null; // Add this line
+  banExpires?: string | Date | null; // Add this line
 };
 
 // Normalize user to make sure all required fields exist
@@ -32,6 +36,10 @@ function normalizeUser(user: AuthUser): User {
     bio: user.bio ?? null,
     createdAt: new Date(user.createdAt),
     updatedAt: new Date(user.updatedAt),
+    role: (user.role as Role) ?? null, // Add this line
+    banReason: user.banReason ?? null, // Add this line
+    banned: user.banned ?? null, // Add this line
+    banExpires: user.banExpires ? new Date(user.banExpires) : null, // Add this line
   };
 }
 

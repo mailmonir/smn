@@ -123,7 +123,11 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt',
   username: 'username',
   displayName: 'displayName',
-  bio: 'bio'
+  bio: 'bio',
+  role: 'role',
+  banned: 'banned',
+  banReason: 'banReason',
+  banExpires: 'banExpires'
 };
 
 exports.Prisma.SessionScalarFieldEnum = {
@@ -134,7 +138,8 @@ exports.Prisma.SessionScalarFieldEnum = {
   updatedAt: 'updatedAt',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
-  userId: 'userId'
+  userId: 'userId',
+  impersonatedBy: 'impersonatedBy'
 };
 
 exports.Prisma.AccountScalarFieldEnum = {
@@ -214,6 +219,69 @@ exports.Prisma.NotificationScalarFieldEnum = {
   createdAt: 'createdAt'
 };
 
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.QuestionScalarFieldEnum = {
+  id: 'id',
+  categoryId: 'categoryId',
+  question: 'question',
+  options: 'options',
+  marks: 'marks',
+  order: 'order',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.QuizAttemptScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  totalScore: 'totalScore',
+  maxScore: 'maxScore',
+  passScore: 'passScore',
+  passed: 'passed',
+  completed: 'completed',
+  currentTab: 'currentTab',
+  startedAt: 'startedAt',
+  completedAt: 'completedAt'
+};
+
+exports.Prisma.UserAnswerScalarFieldEnum = {
+  id: 'id',
+  attemptId: 'attemptId',
+  questionId: 'questionId',
+  selectedOption: 'selectedOption',
+  isCorrect: 'isCorrect',
+  marksEarned: 'marksEarned',
+  answeredAt: 'answeredAt'
+};
+
+exports.Prisma.PaymentScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  amount: 'amount',
+  currency: 'currency',
+  status: 'status',
+  stripeId: 'stripeId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CertificateScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  certificateNumber: 'certificateNumber',
+  issueDate: 'issueDate',
+  score: 'score',
+  passScore: 'passScore'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -223,6 +291,11 @@ exports.Prisma.QueryMode = {
   default: 'default',
   insensitive: 'insensitive'
 };
+exports.Role = exports.$Enums.Role = {
+  USER: 'USER',
+  ADMIN: 'ADMIN'
+};
+
 exports.MediaType = exports.$Enums.MediaType = {
   IMAGE: 'IMAGE',
   VIDEO: 'VIDEO'
@@ -232,6 +305,13 @@ exports.NotificationType = exports.$Enums.NotificationType = {
   LIKE: 'LIKE',
   FOLLOW: 'FOLLOW',
   COMMENT: 'COMMENT'
+};
+
+exports.PaymentStatus = exports.$Enums.PaymentStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  REFUNDED: 'REFUNDED'
 };
 
 exports.Prisma.ModelName = {
@@ -245,7 +325,13 @@ exports.Prisma.ModelName = {
   Comment: 'Comment',
   Like: 'Like',
   Bookmark: 'Bookmark',
-  Notification: 'Notification'
+  Notification: 'Notification',
+  Category: 'Category',
+  Question: 'Question',
+  QuizAttempt: 'QuizAttempt',
+  UserAnswer: 'UserAnswer',
+  Payment: 'Payment',
+  Certificate: 'Certificate'
 };
 
 /**
