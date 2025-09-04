@@ -5,7 +5,7 @@ import { unauthorized } from "next/navigation";
 
 const AdminPage = async () => {
   const session = await auth.api.getSession({ headers: await headers() });
-  if (!session || session.user.role !== "ADMIN") {
+  if (session?.user.role !== "ADMIN") {
     unauthorized();
   }
   return <AdminDashboard />;

@@ -4,12 +4,17 @@ import { ResetPasswordForm } from "./reset-password-form";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
-type SearchParams = Promise<{ [key: string]: string | undefined }>;
+// type SearchParams = Promise<{ [key: string]: string | undefined }>;
+// type SearchParams = { [key: string]: string | string[] | undefined }
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
 
 export default async function LoginPage(props: { searchParams: SearchParams }) {
   const searchParams = await props.searchParams;
-
   const token = searchParams.token;
+
+  if (Array.isArray(token)) {
+    throw new Error("Token cannot be an array");
+  }
 
   if (!token) redirect("/auth/login");
 

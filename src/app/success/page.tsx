@@ -5,11 +5,12 @@ import prisma from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import CertificatePage from "@/components/certificate/CertificatePage";
 
-export default async function SuccessPage({
-  searchParams,
-}: {
-  searchParams: { session_id?: string };
-}) {
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+
+export default async function Page(props: { searchParams: SearchParams }) {
+  const searchParams = await props.searchParams;
+  let sessionId = searchParams.sessionId;
+
   const session = await auth.api.getSession({
     headers: await headers(),
   });
@@ -18,9 +19,13 @@ export default async function SuccessPage({
     redirect("/login");
   }
 
-  const sessionId = searchParams.session_id;
+  // const sessionId = searchParams.session_id;
   if (!sessionId) {
     redirect("/quiz");
+  }
+
+  if (Array.isArray(sessionId)) {
+    sessionId = sessionId[0]; // or handle the array case accordingly
   }
 
   // Find payment by Stripe session ID
