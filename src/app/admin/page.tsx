@@ -1,6 +1,13 @@
 import AdminDashboard from "@/components/admin/AdminDashboard";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
+import { unauthorized } from "next/navigation";
 
-const AdminPage = () => {
+const AdminPage = async () => {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session || session.user.role !== "ADMIN") {
+    unauthorized();
+  }
   return <AdminDashboard />;
 };
 
